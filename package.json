@@ -1,0 +1,20 @@
+{
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Full Stack Open Phonebook Exercise Backend",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/lucianoglapenna/fullstackopen21-phonebook.git"
+  },
+  "author": "Luciano Lapenna",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/lucianoglapenna/fullstackopen21-phonebook/issues"
+  },
+  "homepage": "https://github.com/lucianoglapenna/fullstackopen21-phonebook#readme"
+}
