@@ -1,2 +1,2 @@
 # Ignoring node_modules for Heroku deploying
-node_modules
+/node_modules

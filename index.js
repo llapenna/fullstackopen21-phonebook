@@ -6,6 +6,7 @@ const cors = require('cors')
 const app = express()
 
 // Middleware
+app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
@@ -85,6 +86,14 @@ app.post('/api/persons', (req, res) => {
 
   return res.status(201).json(newPerson)
 })
+
+// app.patch('/api/persons/:id', (req, res) => {
+//   const property = req.body
+
+//   if (!property) {
+//     return res.status(400).json({error: 'Content missing'})
+//   }
+// })
 
 app.get('/info', (req, res) => {
     console.log(req)
