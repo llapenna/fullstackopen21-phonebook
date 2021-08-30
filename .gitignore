@@ -1,2 +1,5 @@
 # Ignoring node_modules for Heroku deploying
 /node_modules
+
+# Ignoring environment variables file
+/.env
