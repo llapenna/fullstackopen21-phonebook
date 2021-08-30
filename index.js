@@ -16,8 +16,8 @@ app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 
-morgan.token('body', (req, res) => JSON.stringify(req.body))
-app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+morgan.token('body', req => JSON.stringify(req.body))
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms - :body'))
 
 
 app.get('/api/persons', (req, res, next) => {
@@ -32,7 +32,7 @@ app.get('/api/persons/:id', (req, res, next) => {
   Person.findById(id)
     .then(p => {
       // We found an entry
-      if(p) 
+      if(p)
         res.json(p)
       else
         res.status(404).end()
@@ -53,7 +53,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
 })
 
 app.post('/api/persons', (req, res, next) => {
-  const {name, number} = req.body
+  const { name, number } = req.body
 
   const person = new Person ({
     name,
@@ -66,11 +66,11 @@ app.post('/api/persons', (req, res, next) => {
     .catch(e => next(e))
 })
 
- app.put('/api/persons/:id', (req, res, next) => {
+app.put('/api/persons/:id', (req, res, next) => {
   const id = req.params.id
-  const {number} = req.body
+  const { number } = req.body
 
-  Person.findByIdAndUpdate(id, {number}, {new: true, runValidators: true})
+  Person.findByIdAndUpdate(id, { number }, { new: true, runValidators: true })
     .then(p => res.status(201).json(p))
     .catch(e => next(e))
 })
@@ -78,12 +78,11 @@ app.post('/api/persons', (req, res, next) => {
 
 
 app.get('/info', (req, res, next) => {
-    
   Person.find({})
-  .then(persons => {
-    res.send(`<p>Phonebook has info for ${persons.length} people.</p><p>${new Date()}</p>`)
-  })
-  .catch(e => next(e))
+    .then(persons => {
+      res.send(`<p>Phonebook has info for ${persons.length} people.</p><p>${new Date()}</p>`)
+    })
+    .catch(e => next(e))
 })
 
 
@@ -97,7 +96,7 @@ app.use(unknownEndpoint)
 const errorHandler = (e, req, res, next) => {
   console.error(e.message)
 
-  if (e.name === 'CastError') { 
+  if (e.name === 'CastError') {
     return res.status(400).send({ error: 'Malformatted id.' })
   }
   else if (e.name === 'ValidationError') {
@@ -113,7 +112,8 @@ const errorHandler = (e, req, res, next) => {
 app.use(errorHandler)
 
 
+
 const port = process.env.PORT
 app.listen(port, () => {
-    console.log(`Server listening on port ${port}`)
+  console.log(`Server listening on port ${port}`)
 })
