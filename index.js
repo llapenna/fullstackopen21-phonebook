@@ -47,7 +47,7 @@ app.delete('/api/persons/:id', (req, res, next) => {
     .then(r => {
       const code = r ? 204 : 404
 
-      res.status(code)
+      res.status(code).end()
     })
     .catch(e => next(e))
 })
@@ -60,6 +60,7 @@ app.post('/api/persons', (req, res, next) => {
     number
   })
 
+  // Undefined body validated by error middleware
   person.save()
     .then(p => res.status(201).json(p))
     .catch(e => next(e))
@@ -69,7 +70,7 @@ app.post('/api/persons', (req, res, next) => {
   const id = req.params.id
   const {number} = req.body
 
-  Person.findByIdAndUpdate(id, {number}, {new: true})
+  Person.findByIdAndUpdate(id, {number}, {new: true, runValidators: true})
     .then(p => res.status(201).json(p))
     .catch(e => next(e))
 })
@@ -87,8 +88,8 @@ app.get('/info', (req, res, next) => {
 
 
 // 404: No endpoint middleware
-const unknownEndpoint = (request, response) => {
-  response.status(404).send({ error: 'Unknown endpoint.' })
+const unknownEndpoint = (req, res) => {
+  res.status(404).send({ error: 'Unknown endpoint.' })
 }
 app.use(unknownEndpoint)
 
@@ -96,11 +97,16 @@ app.use(unknownEndpoint)
 const errorHandler = (e, req, res, next) => {
   console.error(e.message)
 
-  if (e.name === 'CastError') {
+  if (e.name === 'CastError') { 
     return res.status(400).send({ error: 'Malformatted id.' })
   }
+  else if (e.name === 'ValidationError') {
+    return res.status(400).send({ error: e.message })
+  }
   else
-    console.log('Error name: ', e.name)
+  {
+    console.log('Error name: ', e)
+  }
 
   next(e)
 }
